@@ -1,54 +1,468 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SP 202 Green Agentic Software Debugger</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SP 202 Green Agentic Software Debugger</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --deep: #111111;
+      --card: #161616;
+      --border: #2a2a2a;
+      --yellow: #f5c400;
+      --yellow-dim: #c49b00;
+      --yellow-glow: rgba(245, 196, 0, 0.15);
+      --white: #f0f0f0;
+      --muted: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: 'IBM Plex Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── GRID BACKGROUND ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(245,196,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,196,0,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 70px 20px 50px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      background: var(--yellow-glow);
+      border: 1px solid var(--yellow-dim);
+      padding: 4px 14px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--white);
+    }
+
+    h1 span {
+      color: var(--yellow);
+    }
+
+    .course-badge {
+      display: inline-block;
+      margin-top: 18px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── SECTION TITLES ─── */
+    .section {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.1em;
+      color: var(--yellow);
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── TEAM CARDS ─── */
+    .team-grid {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 32px 28px;
+      width: 220px;
+      text-align: center;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--yellow);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      transform-origin: left;
+    }
+
+    .card:hover {
+      border-color: var(--yellow-dim);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(245, 196, 0, 0.1);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 2px solid var(--border);
+      margin-bottom: 16px;
+      filter: grayscale(20%);
+      transition: filter 0.3s, border-color 0.3s;
+    }
+
+    .card:hover img {
+      filter: grayscale(0%);
+      border-color: var(--yellow-dim);
+    }
+
+    .card .name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .card .role {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .card .desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── LINKS / BUTTONS ─── */
+    .links-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--white);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .link-btn:hover {
+      border-color: var(--yellow);
+      background: rgba(245, 196, 0, 0.05);
+      transform: translateX(6px);
+    }
+
+    .link-btn .icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 3px;
+      background: var(--yellow-glow);
+      border: 1px solid var(--yellow-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .link-btn .icon svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--yellow);
+    }
+
+    .link-btn .label {
+      flex: 1;
+    }
+
+    .link-btn .arrow {
+      color: var(--muted);
+      font-size: 1.1rem;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .link-btn:hover .arrow {
+      color: var(--yellow);
+      transform: translateX(4px);
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 28px 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── COMMENT SECTION ─── */
+    /*
+    .comment-section {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .comment-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 32px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 12px 16px;
+      color: var(--white);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--yellow-dim);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+    }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 28px;
+      background: var(--yellow);
+      color: var(--black);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .submit-btn:hover {
+      background: #ffd700;
+      transform: translateY(-1px);
+    }
+    */
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header, .section { animation: fadeUp 0.6s ease both; }
+    .section:nth-of-type(2) { animation-delay: 0.1s; }
+    .section:nth-of-type(3) { animation-delay: 0.2s; }
+  </style>
 </head>
+<body>
 
-<body style="font-family: Arial; text-align: center;">
+  <!-- ─── HEADER ─── -->
+  <header>
+    <div class="tag">CS 4850 · Spring 2026 · Team SP 202</div>
+    <h1>Green Agentic<br/><span>Software Debugger</span></h1>
+    <div class="course-badge">CS 4850 — Spring 2026</div>
+  </header>
 
-<h1>SP 202 Green Agentic Software Debugger</h1>
+  <!-- ─── TEAM ─── -->
+  <div class="section">
+    <div class="section-title">Team Members</div>
+    <div class="team-grid">
 
-<p><b>Course:</b> CS 4850 - Spring 2026 (Section 1)</p>
-<p><b>Instructor:</b> Sharon Perry</p>
+      <div class="card">
+        <img src="Nahum.jpg" alt="Nahum Tadesse"/>
+        <div class="name">Nahum Tadesse</div>
+        <div class="role">Team Leader</div>
+        <div class="desc">Software Development &amp; Testing</div>
+      </div>
 
-<h2>Team Members</h2>
+      <div class="card">
+        <img src="Vignesh.jpg" alt="Vignesh Reddy Vanteru"/>
+        <div class="name">Vignesh Reddy Vanteru</div>
+        <div class="role">Developer</div>
+        <div class="desc">Software Development &amp; Documentation</div>
+      </div>
 
-<div style="display: flex; justify-content: center; gap: 60px; margin-top: 20px;">
-
-    <div style="text-align: center;">
-        <img src="Nahum.jpg" width="150" style="border-radius: 10px;"><br>
-        <p><b>Nahum Tadesse</b></p>
-        <p>Team Leader</p>
-        <p>Software Development & Testing</p>
     </div>
+  </div>
 
-    <div style="text-align: center;">
-        <img src="Vignesh.jpg" width="150" style="border-radius: 10px;"><br>
-        <p><b>Vignesh Reddy Vanteru</b></p>
-        <p>Software Development & Documentation</p>
+  <hr class="divider"/>
+
+  <!-- ─── LINKS ─── -->
+  <div class="section">
+    <div class="section-title">Project Links</div>
+    <div class="links-grid">
+
+      <a class="link-btn" href="https://github.com/NahumTadesse/AgenticAIDebugger" target="_blank">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </span>
+        <span class="label">GitHub Repository</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-btn" href="YOUR-PDF-LINK" target="_blank">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6zm2-5h8v1.5H8V15zm0-3h8v1.5H8V12z"/>
+          </svg>
+        </span>
+        <span class="label">Final Report (PDF)</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-btn" href="YOUR-YOUTUBE-LINK" target="_blank">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.5v-7l6.5 3.5-6.5 3.5z"/>
+          </svg>
+        </span>
+        <span class="label">Presentation Video</span>
+        <span class="arrow">→</span>
+      </a>
+
     </div>
+  </div>
 
-</div>
+  <!-- ─── COMMENT SECTION (uncomment to activate) ─── -->
+  <!--
+  <hr class="divider"/>
+  <div class="comment-section">
+    <div class="section-title">Leave a Comment</div>
+    <div class="comment-form">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" placeholder="Enter your name..." />
+      </div>
+      <div class="form-group">
+        <label for="comment">Comment</label>
+        <textarea id="comment" placeholder="Write your comment here..."></textarea>
+      </div>
+      <button class="submit-btn">Submit Comment →</button>
+    </div>
+  </div>
+  -->
 
-<h2>Project Links</h2>
-
-<p>
-<a href="https://github.com/NahumTadesse/AgenticAIDebugger">
-GitHub Repository
-</a>
-</p>
-
-<p>
-<a href="YOUR-PDF-LINK">
-Final Report (PDF)1
-</a>
-</p>
-
-<p>
-<a href="YOUR-YOUTUBE-LINK">
-Presentation Video
-</a>
-</p>
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    SP 202 · GREEN AGENTIC SOFTWARE DEBUGGER · CS 4850 · SPRING 2026
+  </footer>
 
 </body>
 </html>
